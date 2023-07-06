@@ -20,7 +20,7 @@ const Home = () => {
         const response = await axiosPrivate.get("/users", {
           signal: controller.signal,
         });
-        // console.log(response.data);
+        console.log(response.data);
         isMounted && setUsers(response.data.users);
       } catch (error) {
         console.log(error.message);

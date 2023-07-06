@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
+import PersistLogin from "./components/PersistLogin";
 
 // pages
 import Login from "./pages/Login";
@@ -20,15 +21,19 @@ function App() {
         <Route path="unauthorized" element={<Unauthorized />} />
 
         {/* protected routes */}
-        <Route element={<RequireAuth allowedRoles={["User"]} />}>
-          <Route path="details" element={<Details />} />
-        </Route>
-        <Route element={<RequireAuth allowedRoles={["SuperAdmin"]} />}>
-          <Route path="dashboard" element={<Dashboard />} />
-        </Route>
-        <Route element={<RequireAuth allowedRoles={["SuperAdmin", "User"]} />}>
-          <Route path="/" element={<Home />} />
-          <Route path="profile" element={<Profile />} />
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth allowedRoles={["User"]} />}>
+            <Route path="details" element={<Details />} />
+          </Route>
+          <Route element={<RequireAuth allowedRoles={["SuperAdmin"]} />}>
+            <Route path="dashboard" element={<Dashboard />} />
+          </Route>
+          <Route
+            element={<RequireAuth allowedRoles={["SuperAdmin", "User"]} />}
+          >
+            <Route path="/" element={<Home />} />
+            <Route path="profile" element={<Profile />} />
+          </Route>
         </Route>
 
         {/* catch all */}

@@ -12,9 +12,20 @@ import MenuItem from "@mui/material/MenuItem";
 import PersonIcon from "@mui/icons-material/Person";
 import { Link as RouterLink } from "react-router-dom";
 import { Button, Link as MuiLink } from "@mui/material";
+import useAuth from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import useLogout from "../hooks/useLogout";
 
 function Navbar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const { auth } = useAuth();
+  const navigate = useNavigate();
+  const logout = useLogout();
+
+  const signOut = async () => {
+    await logout();
+    navigate("/login");
+  };
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -80,30 +91,38 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem key="details" onClick={handleCloseUserMenu}>
+              {auth.role !== "SuperAdmin" && (
                 <RouterLink
                   to="/details"
                   style={{ color: "inherit", textDecoration: "inherit" }}
                 >
-                  <Typography textAlign="center">Details</Typography>
+                  <MenuItem key="details" onClick={handleCloseUserMenu}>
+                    <Typography textAlign="center">Details</Typography>
+                  </MenuItem>
                 </RouterLink>
-              </MenuItem>
-              <MenuItem key="profile" onClick={handleCloseUserMenu}>
-                <RouterLink
-                  to="/profile"
-                  style={{ color: "inherit", textDecoration: "inherit" }}
-                >
+              )}
+              <RouterLink
+                to="/profile"
+                style={{ color: "inherit", textDecoration: "inherit" }}
+              >
+                <MenuItem key="profile" onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">Profile</Typography>
-                </RouterLink>
-              </MenuItem>
-              <MenuItem key="logout" onClick={handleCloseUserMenu}>
-                <RouterLink
-                  to="/"
-                  style={{ color: "inherit", textDecoration: "inherit" }}
+                </MenuItem>
+              </RouterLink>
+              <RouterLink
+                to="/"
+                style={{ color: "inherit", textDecoration: "inherit" }}
+              >
+                <MenuItem
+                  key="logout"
+                  onClick={() => {
+                    handleCloseUserMenu();
+                    signOut();
+                  }}
                 >
                   <Typography textAlign="center">Logout</Typography>
-                </RouterLink>
-              </MenuItem>
+                </MenuItem>
+              </RouterLink>
             </Menu>
           </Box>
         </Toolbar>
